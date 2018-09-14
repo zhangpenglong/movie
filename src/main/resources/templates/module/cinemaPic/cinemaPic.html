@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    <div class="container-div">
+
+		<div class="col-sm-12 select-info">
+			<form id="user-form">
+				<input type="hidden" id="cinemaId" name="cinemaId">
+				<div class="select-list">
+					<li>
+						用户状态：
+						<select name="picType" >
+							<option value="">所有</option>
+							<option  th:each="entry : ${cinemaPicTypeList}" th:text="${entry.picTypeName}" th:value="${entry.id}" ></option>
+						 </select>
+					</li>
+					<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+					<a class="btn btn-success btn-rounded btn-sm" onclick="$.table.exportExcel()" shiro:hasPermission="system:user:export"><i class="fa fa-download"></i>&nbsp;导出</a>
+				</div>
+			</form>
+		</div>
+		<div class="btn-group hidden-xs" id="toolbar" role="group">
+			<a class="btn btn-outline btn-success btn-rounded" onclick="add()" shiro:hasPermission="module:cinemaPic:add">
+				<i class="fa fa-plus"></i> 新增
+			</a>
+			<a class="btn btn-outline btn-danger btn-rounded" onclick="$.operate.removeAll()" shiro:hasPermission="module:cinemaPic:remove">
+				<i class="fa fa-trash-o"></i> 删除
+			</a>
+		</div>
+		<div class="col-sm-12 select-table table-striped">
+			<table id="bootstrap-table" data-mobile-responsive="true"></table>
+		</div>
+    </div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('module:cinemaPic:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('module:cinemaPic:remove')}]];
+        var prefix = ctx + "module/cinemaPic"
+
+		function add() {
+            var cId = [[${cId}]];
+			var url = $.table._option.createUrl +"?cId="+ cId
+            $.modal.open("添加图片" , url);
+        }
+
+        $(function() {
+            var cId = [[${cId}]]
+            $("#cinemaId").val([[${cId}]])
+			$(".btn btn-primary btn-rounded btn-sm").click()
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                modalName: "影院图片",
+                queryParams:{
+                    'cinemaId':cId,
+                    pageSize: 10,
+                    pageNum: 1,
+                    orderByColumn:'',
+                    isAsc: 'asc',
+				},
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '' 
+				},
+				{
+					/*field : 'picUrl', */
+					title : '图片',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<img src='+row.picUrl+' style= "width: 50px;"></img> ');
+                        return actions.join('');
+                    }
+				},
+				{
+					field : 'picTypeName',
+					title : '图片类型' 
+				},
+				{
+					field : 'cinemaName',
+					title : '影院，'
+				},
+				{
+					field : 'sequence', 
+					title : '排序' 
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	/*actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');*/
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

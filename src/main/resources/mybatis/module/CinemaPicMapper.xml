@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.module.cinemaPic.mapper.CinemaPicMapper">
+    
+    <resultMap type="CinemaPic" id="CinemaPicResult">
+        <result property="id"    column="id"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="picType"    column="pic_type"    />
+        <result property="cinemaId"    column="cinema_id"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="isValid"    column="is_valid"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="cinemaName"    column="cinema_name"    />
+        <result property="picTypeName"    column="pic_type_name"    />
+
+    </resultMap>
+	
+	<sql id="selectCinemaPicVo">
+        select id, pic_url, pic_type, cinema_id, sequence, is_valid, create_user, create_date, update_user, update_date from movie_cinema_pic
+    </sql>
+	
+    <select id="selectCinemaPicList" parameterType="CinemaPic" resultMap="CinemaPicResult">
+        SELECT
+        pic.id,
+        pic.pic_url,
+        pic.pic_type,
+        pic.cinema_id,
+        pic.sequence,
+        pic.is_valid,
+        pic.create_user,
+        pic.create_date,
+        pic.update_user,
+        pic.update_date,
+        cinema.cinema_name,
+        type.pic_type_name
+        FROM	movie_cinema_pic pic LEFT JOIN  movie_cinema cinema  ON pic.cinema_id = cinema.id
+        LEFT JOIN movie_cinema_pic_type  type ON pic.pic_type = type.id
+        WHERE pic.is_valid = 1 AND cinema.is_valid = 1   AND type.is_valid = 1
+        <if test="id != null and id != ''">
+            and pic.id = #{id}
+        </if>
+         <if test="picUrl != null and picUrl != ''"> and pic.pic_url = #{picUrl}</if>
+         <if test="picType != null and picType != ''"> and pic.pic_type = #{picType}</if>
+         <if test="cinemaId != null and cinemaId != ''"> and pic.cinema_id = #{cinemaId}</if>
+         <if test="sequence != null and sequence != ''"> and pic.sequence = #{sequence}</if>
+         <if test="createUser != null and createUser != ''"> and pic.create_user = #{createUser}</if>
+         <if test="createDate != null and createDate != ''"> and pic.create_date = #{createDate}</if>
+         <if test="updateUser != null and updateUser != ''"> and pic.update_user = #{updateUser}</if>
+         <if test="updateDate != null and updateDate != ''"> and pic.update_date = #{updateDate}</if>
+    </select>
+    
+    <select id="selectCinemaPicById" parameterType="Long" resultMap="CinemaPicResult">
+        <include refid="selectCinemaPicVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCinemaPic" parameterType="CinemaPic">
+        insert into movie_cinema_pic
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="picUrl != null and picUrl != '' ">pic_url,</if>
+			<if test="picType != null and picType != '' ">pic_type,</if>
+			<if test="cinemaId != null and cinemaId != '' ">cinema_id,</if>
+			<if test="sequence != null and sequence != '' ">sequence,</if>
+			<if test="createUser != null and createUser != '' ">create_user,</if>
+			<if test="updateUser != null and updateUser != '' ">update_user,</if>
+			<if test="updateDate != null and updateDate != '' ">update_date,</if>
+            is_valid,
+            create_date,
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="picUrl != null and picUrl != ''">#{picUrl},</if>
+			<if test="picType != null and picType != ''">#{picType},</if>
+			<if test="cinemaId != null and cinemaId != ''">#{cinemaId},</if>
+			<if test="sequence != null and sequence != ''">#{sequence},</if>
+			<if test="createUser != null and createUser != ''">#{createUser},</if>
+			<if test="updateUser != null and updateUser != ''">#{updateUser},</if>
+			<if test="updateDate != null and updateDate != ''">#{updateDate},</if>
+            1,
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateCinemaPic" parameterType="CinemaPic">
+        update movie_cinema_pic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="picUrl != null  and picUrl != ''  ">pic_url = #{picUrl},</if>
+            <if test="picType != null  ">pic_type = #{picType},</if>
+            <if test="cinemaId != null  ">cinema_id = #{cinemaId},</if>
+            <if test="sequence != null  ">sequence = #{sequence},</if>
+            <if test="isValid != null  ">is_valid = #{isValid},</if>
+            <if test="createUser != null  and createUser != ''  ">create_user = #{createUser},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateUser != null  and updateUser != ''  ">update_user = #{updateUser},</if>
+            update_date = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCinemaPicById" parameterType="Long">
+        delete from movie_cinema_pic where id = #{id}
+    </delete>
+	
+    <delete id="deleteCinemaPicByIds" parameterType="String">
+        delete from movie_cinema_pic where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+    <select id="listByCid" parameterType="java.lang.Long" resultMap="CinemaPicResult">
+        SELECT * FROM movie_cinema_pic  where cinema_id = #{cId} AND is_valid = 1
+
+    </select>
+    
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.module.cinemaPicType.mapper.CinemaPicTypeMapper">
+    
+    <resultMap type="CinemaPicType" id="CinemaPicTypeResult">
+        <result property="id"    column="id"    />
+        <result property="picTypeName"    column="pic_type_name"    />
+        <result property="picType"    column="pic_type"    />
+        <result property="isValid"    column="is_valid"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+	
+	<sql id="selectCinemaPicTypeVo">
+        select id, pic_type_name, pic_type, is_valid, create_user, create_date, update_user, update_date from movie_cinema_pic_type
+    </sql>
+	
+    <select id="selectCinemaPicTypeList" parameterType="CinemaPicType" resultMap="CinemaPicTypeResult">
+        <include refid="selectCinemaPicTypeVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="picTypeName != null and picTypeName != ''"> and pic_type_name = #{picTypeName}</if>
+             <if test="picType != null and picType != ''"> and pic_type = #{picType}</if>
+             <if test="isValid != null and isValid != ''"> and is_valid = #{isValid}</if>
+             <if test="createUser != null and createUser != ''"> and create_user = #{createUser}</if>
+             <if test="createDate != null and createDate != ''"> and create_date = #{createDate}</if>
+             <if test="updateUser != null and updateUser != ''"> and update_user = #{updateUser}</if>
+             <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate}</if>
+         </where>
+    </select>
+    
+    <select id="selectCinemaPicTypeById" parameterType="Long" resultMap="CinemaPicTypeResult">
+        <include refid="selectCinemaPicTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCinemaPicType" parameterType="CinemaPicType">
+        insert into movie_cinema_pic_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="picTypeName != null and picTypeName != '' ">pic_type_name,</if>
+			<if test="picType != null and picType != '' ">pic_type,</if>
+			<if test="isValid != null and isValid != '' ">is_valid,</if>
+			<if test="createUser != null and createUser != '' ">create_user,</if>
+			<if test="createDate != null and createDate != '' ">create_date,</if>
+			<if test="updateUser != null and updateUser != '' ">update_user,</if>
+			<if test="updateDate != null and updateDate != '' ">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="picTypeName != null and picTypeName != ''">#{picTypeName},</if>
+			<if test="picType != null and picType != ''">#{picType},</if>
+			<if test="isValid != null and isValid != ''">#{isValid},</if>
+			<if test="createUser != null and createUser != ''">#{createUser},</if>
+			<if test="createDate != null and createDate != ''">#{createDate},</if>
+			<if test="updateUser != null and updateUser != ''">#{updateUser},</if>
+			<if test="updateDate != null and updateDate != ''">#{updateDate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCinemaPicType" parameterType="CinemaPicType">
+        update movie_cinema_pic_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="picTypeName != null  and picTypeName != ''  ">pic_type_name = #{picTypeName},</if>
+            <if test="picType != null  ">pic_type = #{picType},</if>
+            <if test="isValid != null  ">is_valid = #{isValid},</if>
+            <if test="createUser != null  and createUser != ''  ">create_user = #{createUser},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateUser != null  and updateUser != ''  ">update_user = #{updateUser},</if>
+            <if test="updateDate != null  ">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCinemaPicTypeById" parameterType="Long">
+        delete from movie_cinema_pic_type where id = #{id}
+    </delete>
+	
+    <delete id="deleteCinemaPicTypeByIds" parameterType="String">
+        delete from movie_cinema_pic_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="listAll"  resultMap="CinemaPicTypeResult">
+        SELECT  * FROM  movie_cinema_pic_type  where is_valid = 1
+
+    </select>
+    
+</mapper>

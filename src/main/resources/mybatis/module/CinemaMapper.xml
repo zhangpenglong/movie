@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.module.cinema.mapper.CinemaMapper">
+    
+    <resultMap type="Cinema" id="CinemaResult">
+        <result property="id"    column="id"    />
+        <result property="cinemaName"    column="cinema_name"    />
+        <result property="cinemaAddress"    column="cinema_address"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="area"    column="area"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="telephone"    column="telephone"    />
+        <result property="glassesExplain"    column="glasses_explain"    />
+        <result property="childExplain"    column="child_explain"    />
+        <result property="parkingExplain"    column="parking_explain"    />
+        <result property="wifiExplain"    column="wifi_explain"    />
+        <result property="notice"    column="notice"    />
+        <result property="isValid"    column="is_valid"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+	
+	<sql id="selectCinemaVo">
+        select id, cinema_name, cinema_address, province, city, area, longitude, latitude, telephone, glasses_explain, child_explain, parking_explain, wifi_explain, notice, is_valid, create_user, create_date, update_user, update_date from movie_cinema
+    </sql>
+	
+    <select id="selectCinemaList" parameterType="Cinema" resultMap="CinemaResult">
+        <include refid="selectCinemaVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="cinemaName != null and cinemaName != ''"> and cinema_name = #{cinemaName}</if>
+             <if test="cinemaAddress != null and cinemaAddress != ''"> and cinema_address = #{cinemaAddress}</if>
+             <if test="province != null and province != ''"> and province = #{province}</if>
+             <if test="city != null and city != ''"> and city = #{city}</if>
+             <if test="area != null and area != ''"> and area = #{area}</if>
+             <if test="longitude != null and longitude != ''"> and longitude = #{longitude}</if>
+             <if test="latitude != null and latitude != ''"> and latitude = #{latitude}</if>
+             <if test="telephone != null and telephone != ''"> and telephone = #{telephone}</if>
+             <if test="glassesExplain != null and glassesExplain != ''"> and glasses_explain = #{glassesExplain}</if>
+             <if test="childExplain != null and childExplain != ''"> and child_explain = #{childExplain}</if>
+             <if test="parkingExplain != null and parkingExplain != ''"> and parking_explain = #{parkingExplain}</if>
+             <if test="wifiExplain != null and wifiExplain != ''"> and wifi_explain = #{wifiExplain}</if>
+             <if test="notice != null and notice != ''"> and notice = #{notice}</if>
+             <if test="isValid != null and isValid != ''"> and is_valid = #{isValid}</if>
+             <if test="createUser != null and createUser != ''"> and create_user = #{createUser}</if>
+             <if test="createDate != null and createDate != ''"> and create_date = #{createDate}</if>
+             <if test="updateUser != null and updateUser != ''"> and update_user = #{updateUser}</if>
+             <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate}</if>
+         </where>
+    </select>
+    
+    <select id="selectCinemaById" parameterType="Long" resultMap="CinemaResult">
+        <include refid="selectCinemaVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCinema" parameterType="Cinema">
+        insert into movie_cinema
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="cinemaName != null and cinemaName != '' ">cinema_name,</if>
+			<if test="cinemaAddress != null and cinemaAddress != '' ">cinema_address,</if>
+			<if test="province != null and province != '' ">province,</if>
+			<if test="city != null and city != '' ">city,</if>
+			<if test="area != null and area != '' ">area,</if>
+			<if test="longitude != null and longitude != '' ">longitude,</if>
+			<if test="latitude != null and latitude != '' ">latitude,</if>
+			<if test="telephone != null and telephone != '' ">telephone,</if>
+			<if test="glassesExplain != null and glassesExplain != '' ">glasses_explain,</if>
+			<if test="childExplain != null and childExplain != '' ">child_explain,</if>
+			<if test="parkingExplain != null and parkingExplain != '' ">parking_explain,</if>
+			<if test="wifiExplain != null and wifiExplain != '' ">wifi_explain,</if>
+			<if test="notice != null and notice != '' ">notice,</if>
+			<if test="isValid != null and isValid != '' ">is_valid,</if>
+			<if test="createUser != null and createUser != '' ">create_user,</if>
+			<if test="updateUser != null and updateUser != '' ">update_user,</if>
+			<if test="updateDate != null and updateDate != '' ">update_date,</if>
+            create_date
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="cinemaName != null and cinemaName != ''">#{cinemaName},</if>
+			<if test="cinemaAddress != null and cinemaAddress != ''">#{cinemaAddress},</if>
+			<if test="province != null and province != ''">#{province},</if>
+			<if test="city != null and city != ''">#{city},</if>
+			<if test="area != null and area != ''">#{area},</if>
+			<if test="longitude != null and longitude != ''">#{longitude},</if>
+			<if test="latitude != null and latitude != ''">#{latitude},</if>
+			<if test="telephone != null and telephone != ''">#{telephone},</if>
+			<if test="glassesExplain != null and glassesExplain != ''">#{glassesExplain},</if>
+			<if test="childExplain != null and childExplain != ''">#{childExplain},</if>
+			<if test="parkingExplain != null and parkingExplain != ''">#{parkingExplain},</if>
+			<if test="wifiExplain != null and wifiExplain != ''">#{wifiExplain},</if>
+			<if test="notice != null and notice != ''">#{notice},</if>
+			<if test="isValid != null and isValid != ''">#{isValid},</if>
+			<if test="createUser != null and createUser != ''">#{createUser},</if>
+			<if test="updateUser != null and updateUser != ''">#{updateUser},</if>
+			<if test="updateDate != null and updateDate != ''">#{updateDate},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateCinema" parameterType="Cinema">
+        update movie_cinema
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cinemaName != null  and cinemaName != ''  ">cinema_name = #{cinemaName},</if>
+            <if test="cinemaAddress != null  and cinemaAddress != ''  ">cinema_address = #{cinemaAddress},</if>
+            <if test="province != null  and province != ''  ">province = #{province},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="area != null  and area != ''  ">area = #{area},</if>
+            <if test="longitude != null  and longitude != ''  ">longitude = #{longitude},</if>
+            <if test="latitude != null  and latitude != ''  ">latitude = #{latitude},</if>
+            <if test="telephone != null  and telephone != ''  ">telephone = #{telephone},</if>
+            <if test="glassesExplain != null  and glassesExplain != ''  ">glasses_explain = #{glassesExplain},</if>
+            <if test="childExplain != null  and childExplain != ''  ">child_explain = #{childExplain},</if>
+            <if test="parkingExplain != null  and parkingExplain != ''  ">parking_explain = #{parkingExplain},</if>
+            <if test="wifiExplain != null  and wifiExplain != ''  ">wifi_explain = #{wifiExplain},</if>
+            <if test="notice != null  and notice != ''  ">notice = #{notice},</if>
+            <if test="isValid != null  ">is_valid = #{isValid},</if>
+            <if test="createUser != null  and createUser != ''  ">create_user = #{createUser},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateUser != null  and updateUser != ''  ">update_user = #{updateUser},</if>
+            update_date = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCinemaById" parameterType="Long">
+        delete from movie_cinema where id = #{id}
+    </delete>
+	
+    <delete id="deleteCinemaByIds" parameterType="String">
+        delete from movie_cinema where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="listAll" resultMap="CinemaResult">
+      SELECT  * FROM  movie_cinema where is_valid = 1
+    </select>
+</mapper>

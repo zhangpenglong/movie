@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-cinemaHall-edit" th:object="${cinemaHall}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">电影厅名字：</label>
+                <div class="col-sm-8">
+                    <input id="hallName" name="hallName" th:field="*{hallName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">影院ID：</label>
+                <div class="col-sm-8">
+                    <!--<input id="cinemaId" name="cinemaId" th:field="*{cinemaId}" class="form-control" type="text">-->
+                    <div class="col-sm-8">
+                        <select id="cinemaId" name="cinemaId" class="form-control m-b" >
+                            <option value="">请选择</option>
+                            <option  th:each="entry : ${cinemaList}" th:if="${entry.id == cinemaHall.cinemaId}" th:selected="true" th:text="${entry.cinemaName}" th:value="${entry.id}" ></option>
+                            <option  th:each="entry : ${cinemaList}" th:if="${entry.id != cinemaHall.cinemaId}" th:text="${entry.cinemaName}" th:value="${entry.id}" ></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">提交</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "module/cinemaHall"
+		$("#form-cinemaHall-edit").validate({
+            rules:{
+                hallName:{
+                    required:true,
+                },
+                cinemaId:{
+                    required:true
+                },
+
+            },
+			submitHandler: function(form) {
+				$.operate.save(prefix + "/edit", $('#form-cinemaHall-edit').serialize());
+			}
+		});
+	</script>
+</body>
+</html>

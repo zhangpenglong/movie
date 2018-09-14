@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header">
+
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-cinemaPic-add">
+			<div class="form-group">	
+				<!--<label class="col-sm-3 control-label">图片地址：</label>-->
+				<!--<div class="imageBox">-->
+					<!--<div class="thumbBox"></div>-->
+					<!--<div class="spinner" style="display: none">Loading...</div>-->
+				<!--</div>-->
+				<!--<img class="layui-upload-img" id="picUrlImg">-->
+				<!--<div class="col-sm-8">-->
+					<!--<a href="javascript:void(0)" class="upload-img"> <label for="picUrl">上传图片</label> </a>-->
+					<!--<input type="file" class="" name="picUrl" id="picUrl" accept="image/*"/>-->
+				<!--</div>-->
+				<!--<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+					<legend>多文件列表上传</legend>
+				</fieldset>-->
+				<div class="layui-upload" style="padding-left: 100px">
+					<button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button>
+					<div class="layui-upload-list">
+						<table class="layui-table" >
+							<thead>
+							<tr><th>文件名</th>
+								<th>大小</th>
+								<th>状态</th>
+								<th>操作</th>
+							</tr></thead>
+							<tbody id="demoList"></tbody>
+						</table>
+					</div>
+					<button type="button" class="layui-btn" id="testListAction">开始上传</button>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片类型：</label>
+				<div class="col-sm-8">
+					<select id="picType" name="picType" class="form-control m-b" >
+						<option  th:each="entry : ${cinemaPicTypeList}" th:text="${entry.picTypeName}" th:value="${entry.id}" ></option>
+					</select>
+				</div>
+			</div>
+			<!--<div class="form-group" >-->
+				<!--<label class="col-sm-3 control-label">影院：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="cinemaId" name="cinemaId" class="form-control" type="text" th:text="${cId}">-->
+				<!--</div>-->
+			<!--</div>-->
+			<input id="cinemaId" style="display: none" name="cinemaId" class="form-control" type="text" >
+			<input id="picUrl" style="display: none" name="picUrl" class="form-control" type="text" >
+			<div class="form-group">
+				<label class="col-sm-3 control-label">排序：</label>
+				<div class="col-sm-8">
+					<input id="sequence" name="sequence" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">提交</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+	<script th:src="@{/ajax/libs/cropbox/cropbox.js}"></script>
+    <script type="text/javascript">
+        var picName = "";
+		var prefix = ctx + "module/cinemaPic"
+		var cId = [[${cId}]]
+		$("#form-cinemaPic-add").validate({
+			rules:{
+                picType:{
+					required:true,
+				},
+                sequence:{
+                    required:true,
+                    isNumber:true
+                },
+			},
+			submitHandler: function(form) {
+			    if(!picName){
+                    return layer.msg('请选择图片');
+				}else{
+                    $.operate.save(prefix + "/add", $('#form-cinemaPic-add').serialize());
+                }
+			}
+		});
+
+		$(function () {
+		    $("#cinemaId").val([[${cId}]])
+        })
+
+
+       /* var avatar = '';
+        var options = {
+            thumbBox: '.thumbBox',
+            spinner: '.spinner',
+            imgSrc: ''
+        }*/
+/*
+        var cropper = $('.imageBox').cropbox(options);
+        $('#picUrl').on('change',
+            function() {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    options.imgSrc = e.target.result;
+                    //根据MIME判断上传的文件是不是图片类型
+                    if((options.imgSrc).indexOf("image/")==-1){
+                        parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+                    } else {
+                        cropper = $('.imageBox').cropbox(options);
+                        var img = cropper.getBlob();
+                        var formdata = new FormData();
+                        formdata.append("avatarfile", img);
+                     //   formdata.append("userId", $("#userId").val());
+                        $.ajax({
+                            url: ctx + "system/user/profile/updateAvatar",
+                            data: formdata,
+                            type: "post",
+                            processData: false,
+                            contentType: false,
+                            success: function(result) {
+                                $.operate.saveSuccess(result);
+                            }
+                        })
+                    }
+                }
+                reader.readAsDataURL(this.files[0]);
+            })*/
+
+//        layui.use('upload',function(){
+        //            var $=layui.jquery
+        //                ,upload=layui.upload;
+        //
+        //            //普通图片上传
+        //            var uploadInst=upload.render({
+        //                elem:'#picUrl'
+        //                ,url:ctx + "system/user/profile/updateAvatar"
+        //                ,before:function(obj){
+        //                    //预览本地文件示例
+        ////                    obj,preview(function(index,file,result){
+        ////                        $('#picUrlImg').attr('src',result);
+        ////                    });
+        //                }
+        //                ,done:function(res){
+        //                    //如果上传失败
+        //                    if(res.code>0){
+        //                        return layer.msg('上传失败');
+        //                        //上传成功
+        //                        layer.msg('上传成功');
+        //                    }
+        //                }
+        //		})
+        //		})
+
+
+
+        layui.use('upload', function(){
+            var $ = layui.jquery
+                ,upload = layui.upload;
+            //多文件列表示例
+            var demoListView = $('#demoList')
+                ,uploadListIns = upload.render({
+                elem: '#testList'
+                ,url: ctx + "module/cinemaPic/uploadPic"
+                ,accept: 'file'
+                ,multiple: true
+                ,auto: false
+                ,size: 5120
+                ,data:{'cId':cId}
+                ,bindAction: '#testListAction'
+                ,choose: function(obj){
+                    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    //读取本地文件
+                    obj.preview(function(index, file, result){
+                        var tr = $(['<tr id="upload-'+ index +'">'
+                            ,'<td>'+ file.name +'</td>'
+                            ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+                            ,'<td>等待上传</td>'
+                            ,'<td>'
+                            ,'<button class="layui-btn layui-btn-mini demo-reload layui-hide">重传</button>'
+                            ,'<button class="layui-btn layui-btn-mini layui-btn-danger demo-delete">删除</button>'
+                            ,'</td>'
+                            ,'</tr>'].join(''));
+                        //单个重传
+                        tr.find('.demo-reload').on('click', function(){
+                            obj.upload(index, file);
+                        });
+                        //删除
+                        tr.find('.demo-delete').on('click', function(){
+                            delete files[index]; //删除对应的文件
+                            tr.remove();
+                            uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                        });
+                        demoListView.append(tr);
+                    });
+                }
+                ,done: function(res, index, upload){
+                    if(res.code == 0){ //上传成功
+                        var tr = demoListView.find('tr#upload-'+ index)
+                            ,tds = tr.children();
+                        tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                        tds.eq(3).html(''); //清空操作
+                        picName = picName+res.msg+";"
+                        $("#picUrl").val(picName)
+                        return delete this.files[index]; //删除文件队列已经上传成功的文件
+                    }
+                    this.error(index, upload);
+                }
+                ,error: function(index, upload){
+                    var tr = demoListView.find('tr#upload-'+ index)
+                        ,tds = tr.children();
+                    tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                    tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                }
+            });
+        });
+	</script>
+</body>
+</html>

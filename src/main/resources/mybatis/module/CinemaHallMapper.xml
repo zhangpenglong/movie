@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.module.cinemaHall.mapper.CinemaHallMapper">
+    
+    <resultMap type="CinemaHall" id="CinemaHallResult">
+        <result property="id"    column="id"    />
+        <result property="hallName"    column="hall_name"    />
+        <result property="seatNumber"    column="seat_number"    />
+        <result property="rowNumber"    column="row_number"    />
+        <result property="columnNumber"    column="column_number"    />
+        <result property="seatRule"    column="seat_rule"    />
+        <result property="cinemaId"    column="cinema_id"    />
+        <result property="isValid"    column="is_valid"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="cinemaName"    column="cinema_name"    />
+    </resultMap>
+	
+	<sql id="selectCinemaHallVo">
+        select id, hall_name, seat_number, row_number, column_number, seat_rule, cinema_id, is_valid, create_user, create_date, update_user, update_date from movie_cinema_hall
+    </sql>
+	
+    <select id="selectCinemaHallList" parameterType="CinemaHall" resultMap="CinemaHallResult">
+
+        SELECT
+        hall.id,
+        hall.hall_name,
+        hall.seat_number,
+        hall.row_number,
+        hall.column_number,
+        hall.seat_rule,
+        hall.cinema_id,
+        hall.is_valid,
+        hall.create_user,
+        hall.create_date,
+        hall.update_user,
+        hall.update_date,
+        cinema.cinema_name
+        FROM
+        movie_cinema_hall hall LEFT JOIN  movie_cinema  cinema   ON cinema.id = hall.cinema_id
+        where hall.is_valid = 1 AND cinema.is_valid = 1
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="hallName != null and hallName != ''"> and hall_name = #{hallName}</if>
+             <if test="seatNumber != null and seatNumber != ''"> and seat_number = #{seatNumber}</if>
+             <if test="rowNumber != null and rowNumber != ''"> and row_number = #{rowNumber}</if>
+             <if test="columnNumber != null and columnNumber != ''"> and column_number = #{columnNumber}</if>
+             <if test="seatRule != null and seatRule != ''"> and seat_rule = #{seatRule}</if>
+             <if test="cinemaId != null and cinemaId != ''"> and cinema_id = #{cinemaId}</if>
+             <if test="isValid != null and isValid != ''"> and is_valid = #{isValid}</if>
+             <if test="createUser != null and createUser != ''"> and create_user = #{createUser}</if>
+             <if test="createDate != null and createDate != ''"> and create_date = #{createDate}</if>
+             <if test="updateUser != null and updateUser != ''"> and update_user = #{updateUser}</if>
+             <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate}</if>
+    </select>
+    
+    <select id="selectCinemaHallById" parameterType="Long" resultMap="CinemaHallResult">
+        <include refid="selectCinemaHallVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCinemaHall" parameterType="CinemaHall">
+        insert into movie_cinema_hall
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="hallName != null and hallName != '' ">hall_name,</if>
+			<if test="seatNumber != null and seatNumber != '' ">seat_number,</if>
+			<if test="rowNumber != null and rowNumber != '' ">row_number,</if>
+			<if test="columnNumber != null and columnNumber != '' ">column_number,</if>
+			<if test="seatRule != null and seatRule != '' ">seat_rule,</if>
+			<if test="cinemaId != null and cinemaId != '' ">cinema_id,</if>
+			<if test="createUser != null and createUser != '' ">create_user,</if>
+			<if test="updateUser != null and updateUser != '' ">update_user,</if>
+			<if test="updateDate != null and updateDate != '' ">update_date,</if>
+            is_valid,
+            create_date,
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="hallName != null and hallName != ''">#{hallName},</if>
+			<if test="seatNumber != null and seatNumber != ''">#{seatNumber},</if>
+			<if test="rowNumber != null and rowNumber != ''">#{rowNumber},</if>
+			<if test="columnNumber != null and columnNumber != ''">#{columnNumber},</if>
+			<if test="seatRule != null and seatRule != ''">#{seatRule},</if>
+			<if test="cinemaId != null and cinemaId != ''">#{cinemaId},</if>
+			<if test="createUser != null and createUser != ''">#{createUser},</if>
+			<if test="createDate != null and createDate != ''">#{createDate},</if>
+			<if test="updateUser != null and updateUser != ''">#{updateUser},</if>
+			<if test="updateDate != null and updateDate != ''">#{updateDate},</if>
+            1,
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateCinemaHall" parameterType="CinemaHall">
+        update movie_cinema_hall
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hallName != null  and hallName != ''  ">hall_name = #{hallName},</if>
+            <if test="seatNumber != null  ">seat_number = #{seatNumber},</if>
+            <if test="rowNumber != null  ">row_number = #{rowNumber},</if>
+            <if test="columnNumber != null  ">column_number = #{columnNumber},</if>
+            <if test="seatRule != null  and seatRule != ''  ">seat_rule = #{seatRule},</if>
+            <if test="cinemaId != null  ">cinema_id = #{cinemaId},</if>
+            <if test="isValid != null  ">is_valid = #{isValid},</if>
+            <if test="createUser != null  and createUser != ''  ">create_user = #{createUser},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="updateUser != null  and updateUser != ''  ">update_user = #{updateUser},</if>
+            update_date =sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCinemaHallById" parameterType="Long">
+        delete from movie_cinema_hall where id = #{id}
+    </delete>
+	
+    <delete id="deleteCinemaHallByIds" parameterType="String">
+        delete from movie_cinema_hall where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

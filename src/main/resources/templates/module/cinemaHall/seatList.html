@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header">
+</head>
+<link th:href="@{/css/seat.css}" rel="stylesheet"/>
+<body class="gray-bg">
+    <div class="container-div">
+		<div class="btn-group hidden-xs" id="toolbar" role="group">
+			<a class="btn btn-outline btn-success btn-rounded" onclick="$.operate.add()" shiro:hasPermission="module:cinemaHall:add">
+				<i class="fa fa-plus"></i> 新增
+			</a>
+			<a class="btn btn-outline btn-danger btn-rounded" onclick="$.operate.removeAll()" shiro:hasPermission="module:cinemaHall:remove">
+				<i class="fa fa-trash-o"></i> 删除
+			</a>
+		</div>
+			
+		<div class="col-sm-12 select-table table-striped">
+			<div class="main clearfix">
+				<div class="hall">
+
+					<div class="seat-example">
+						<div class=" example">
+								横排：<input type="text" name="row" id = "row" style="width: 100px;"/>
+						</div>
+						<div class=" example">
+								列：<input type="text" name="column" id = "column" style="width: 100px;"/>
+						</div>
+						<div class="example">
+							<select class="form-control m-b" >
+								<option  value="0" >普通座位</option>
+								<option  value="1" >情侣2座</option>
+								<option  value="2" >情侣3座</option>
+							</select>
+						</div>
+						<div class="example">
+							<a class="btn btn-primary btn-rounded btn-sm" onclick="creatSeat()"><i class="fa fa-search"></i>&nbsp;生成</a>
+						</div>
+					</div>
+					<div class="seats-block" data-cols="10" data-section-id="01" data-section-name="全厅" data-seq-no="201809110180289">
+						<div class="row-id-container">
+						</div>
+
+						<div class="seats-container">
+							<!--<div class="screen-container">
+								<div class="screen">银幕中央</div>
+								<div class="c-screen-line"></div>
+							</div>-->
+
+							<div class="seats-wrapper">
+
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+
+		</div>
+    </div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('module:cinemaHall:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('module:cinemaHall:remove')}]];
+        var prefix = ctx + "module/cinemaHall"
+
+		function setList() {
+            window.location.href =  ctx + "module/cinemaPic"
+        }
+        
+        function creatSeat() {
+
+            var row = $("#row").val()
+            var column = $("#column").val()
+            var userName=/^[0-9]{1,3}$/;
+            if(!(userName).test(row)  || !(userName).test(column)){
+                return layer.msg('请输入正确的数据');
+			}
+            row = parseInt(row)
+            column = parseInt(column)
+			var container = "";
+			for(var i = 1; i < row+1 ; i++){
+                container +='<span class="row-id">'+i+'</span>'
+			}
+
+			$(".row-id-container").html(container)
+			var seatsWrapper = ""
+            for(var i = 1; i < row+1 ; i++){
+                seatsWrapper +='<div class="row">'
+				var span = ""
+                for(var j = 1; j < column +1 ; j++){
+                    span += ' <img class="seat selectable" data-column-id="'+i+'" id = "'+i+'seat'+j+'" data-row-id="'+j+'" data-no="09010101" data-st="N"'+
+                       'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
+						'<img class="float_div"  id = "'+i+'seat'+j+'img'+'"  src="../../img/remove.png" onclick="removeSeat(\''+i+'seat'+j+'\')"></img></img>'+
+						'</span>'
+				}
+                seatsWrapper += span
+                seatsWrapper +='</div>'
+            }
+
+            $(".seats-wrapper").html(seatsWrapper)
+        }
+
+        function removeSeat(id) {
+            $("#"+id).attr("class",'none');
+            $("#"+id).attr("src",'../../img/addseat.png');
+            $("#"+id).attr("onclick",'addSeat(\''+id+'\')');
+            $("#"+id+"img").attr("style",'display:none');
+//            $("#2args").removeAttr("disabled");
+        }
+
+        function addSeat(id) {
+            $("#"+id).attr("class",'seat selectable');
+            $("#"+id).removeAttr("onclick");
+            $("#"+id).removeAttr("src");
+            $("#"+id+"img").removeAttr("style");
+
+        }
+    </script>
+</body>
+</html>

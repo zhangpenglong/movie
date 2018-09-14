@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-cinemaHall-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">电影厅名字：</label>
+				<div class="col-sm-8">
+					<input id="hallName" name="hallName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">影院：</label>
+				<div class="col-sm-8">
+					<select id="cinemaId" name="cinemaId" class="form-control m-b" >
+						<option value="">请选择</option>
+						<option  th:each="entry : ${cinemaList}" th:text="${entry.cinemaName}" th:value="${entry.id}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">提交</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "module/cinemaHall"
+		$("#form-cinemaHall-add").validate({
+			rules:{
+                hallName:{
+                    required:true,
+				},
+                cinemaId:{
+                    required:true
+				},
+
+			},
+			submitHandler: function(form) {
+				$.operate.save(prefix + "/add", $('#form-cinemaHall-add').serialize());
+			}
+		});
+	</script>
+</body>
+</html>
