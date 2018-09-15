@@ -125,7 +125,27 @@ public class CinemaHallController extends BaseController
 			return "error/500";
 		}
 		map.put("seat",cinemaHall.getSeatRule());
+		map.put("countRow",cinemaHall.getRowNumber());
+		map.put("id",id);
 		return prefix + "/seatList";
 	}
+
+
+
+
+	/**
+	 * 修改保存影院影厅
+	 */
+	@RequiresPermissions("module:cinemaHall:edit")
+	@Log(title = "修改座位", businessType = BusinessType.UPDATE)
+	@PostMapping("/inseartSeat")
+	@ResponseBody
+	public AjaxResult inseartSeat(CinemaHall cinemaHall){
+
+		return toAjax(cinemaHallService.updateCinemaHall(cinemaHall));
+	}
+
+
+
 
 }

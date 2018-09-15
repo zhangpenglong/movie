@@ -7,12 +7,12 @@
 <body class="gray-bg">
     <div class="container-div">
 		<div class="btn-group hidden-xs" id="toolbar" role="group">
-			<a class="btn btn-outline btn-success btn-rounded" onclick="$.operate.add()" shiro:hasPermission="module:cinemaHall:add">
+			<a class="btn btn-outline btn-success btn-rounded" onclick="inseartSeat()" shiro:hasPermission="module:cinemaHall:add">
 				<i class="fa fa-plus"></i> 新增
 			</a>
-			<a class="btn btn-outline btn-danger btn-rounded" onclick="$.operate.removeAll()" shiro:hasPermission="module:cinemaHall:remove">
+			<!--<a class="btn btn-outline btn-danger btn-rounded" onclick="$.operate.removeAll()" shiro:hasPermission="module:cinemaHall:remove">
 				<i class="fa fa-trash-o"></i> 删除
-			</a>
+			</a>-->
 		</div>
 			
 		<div class="col-sm-12 select-table table-striped">
@@ -27,10 +27,9 @@
 								列：<input type="text" name="column" id = "column" style="width: 100px;"/>
 						</div>
 						<div class="example">
-							<select class="form-control m-b" >
+							<select id="seatType" class="form-control m-b" >
 								<option  value="0" >普通座位</option>
 								<option  value="1" >情侣2座</option>
-								<option  value="2" >情侣3座</option>
 							</select>
 						</div>
 						<div class="example">
@@ -63,6 +62,99 @@
         var removeFlag = [[${@permission.hasPermi('module:cinemaHall:remove')}]];
         var prefix = ctx + "module/cinemaHall"
 
+	$(function () {
+	   var seatRule =  [[${seat}]]
+		if(!seatRule || "" == seatRule){
+		   return;
+		}
+		var countRow = [[${countRow}]]
+        //生成左边数字列
+        var container = "";
+        for(var i = 1; i < countRow+1 ; i++){
+            container +='<span class="row-id">'+i+'</span>'
+        }
+        $(".row-id-container").html(container)
+
+
+        var spl = seatRule.split(";")
+		var rowTemp = -1
+		var seatsWrapper =""
+		for(var s = 0; s<spl.length-1; s++){
+		    var seat = spl[s]
+			var seatSpl = seat.split(",")
+			var row = seatSpl[0]
+			var col = seatSpl[1]
+			var seatType = seatSpl[2]
+			var flag = seatSpl[3]
+			row = parseInt(row)
+			if(rowTemp != row){
+		        if(rowTemp != -1){
+                    seatsWrapper +='</div>'
+                }
+                seatsWrapper +='<div class="row">'
+                rowTemp = row
+            }
+            col = parseInt(col)
+            seatType = parseInt(seatType)
+            flag = parseInt(flag)
+			var cla = ""
+			var span = "";
+            if(1 == seatType){ // 普通座位
+                if(0 == flag){ // 不显示
+                    cla = "myseatFlag none"
+                    span += ' <img seat_type="'+col+','+row+',1" src="../../img/addseat.png" class="'+cla+'" data-column-id="'+col+'" id = "'+col+'seat'+row+'" data-row-id="'+row+'"'+
+                        'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
+                        '<img class="float_div"  style="display: none" id = "'+col+'seat'+row+'img'+'"  src="../../img/remove.png" onclick="removeSeat(\''+col+'seat'+row+'\')"></img></img>'+
+                        '</span>'
+				}else{
+                    cla = "myseatFlag seat selectable"
+                    span += ' <img seat_type="'+col+','+row+',1" class="'+cla+'" data-column-id="'+col+'" id = "'+col+'seat'+row+'" data-row-id="'+row+'"'+
+                        'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
+                        '<img class="float_div"  id = "'+col+'seat'+row+'img'+'"  src="../../img/remove.png" onclick="removeSeat(\''+col+'seat'+row+'\')"></img></img>'+
+                        '</span>'
+				}
+
+            }else if(21 == seatType){  //情侣左
+                if(0 == flag){ // 不显示
+                    cla = "myseatFlag none"
+                    span += ' <img seat_type="'+col+','+row+',1" class="'+cla+'"  src="../../img/addseat.png"  data-column-id="'+col+'" id = "'+col+'seat'+row+'" data-row-id="'+row+'"'+
+                        'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
+                        '</span>'
+                }else{
+                    cla = "myseatFlag seat lover lover-left selectable"
+
+                    span += ' <img seat_type="'+col+','+row+',1" class="'+cla+'" data-column-id="'+col+'" id = "'+col+'seat'+row+'" data-row-id="'+row+'"'+
+                        'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
+                        '</span>'
+                }
+
+
+			}else{
+                if(0 == flag){ // 不显示
+                    cla = "myseatFlag none"
+                    span += ' <img seat_type="'+col+','+row+',1" class="'+cla+'"  src="../../img/addseat.png"   data-column-id="'+col+'" id = "'+col+'seat'+row+'" data-row-id="'+row+'"'+
+                        'data-act="seat-click"  data-bid="b_s7eiiijf" >'
+                        +'<img class="float_div" style="display: none" id = "'+col+'seat'+row+'img'+'"  src="../../img/remove.png" onclick="removeSeat(\''+col+'seat'+row+'\')"></img></img>'+
+                        '</span>'
+                }else{
+                    cla = "myseatFlag seat lover lover-right selectable"
+                    span += ' <img seat_type="'+col+','+row+',1" class="'+cla+'" data-column-id="'+col+'" id = "'+col+'seat'+row+'" data-row-id="'+row+'"'+
+                        'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
+                        +'<img class="float_div"  id = "'+col+'seat'+row+'img'+'"  src="../../img/remove.png" onclick="removeSeat(\''+col+'seat'+row+'\')"></img></img>'+
+                        '</span>'
+                }
+
+
+
+
+			}
+			//生成座位
+            seatsWrapper += span
+		}
+        $(".seats-wrapper").html(seatsWrapper)
+	})
+
+
 		function setList() {
             window.location.href =  ctx + "module/cinemaPic"
         }
@@ -81,18 +173,48 @@
 			for(var i = 1; i < row+1 ; i++){
                 container +='<span class="row-id">'+i+'</span>'
 			}
+			var type = $("#seatType").val()
+			var cla = "";
+			if(0 == type){
+			    //普通座位
+				cla = "seat selectable";
+			}else{
+			    //情侣座位
+
+			}
 
 			$(".row-id-container").html(container)
 			var seatsWrapper = ""
             for(var i = 1; i < row+1 ; i++){
                 seatsWrapper +='<div class="row">'
 				var span = ""
-                for(var j = 1; j < column +1 ; j++){
-                    span += ' <img class="seat selectable" data-column-id="'+i+'" id = "'+i+'seat'+j+'" data-row-id="'+j+'" data-no="09010101" data-st="N"'+
-                       'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
-						'<img class="float_div"  id = "'+i+'seat'+j+'img'+'"  src="../../img/remove.png" onclick="removeSeat(\''+i+'seat'+j+'\')"></img></img>'+
-						'</span>'
+                if(0 == type){
+                    for(var j = 1; j < column +1 ; j++){
+                        span += ' <img seat_type="'+i+','+j+',1" class="myseatFlag seat selectable" data-column-id="'+i+'" id = "'+i+'seat'+j+'" data-row-id="'+j+'" data-no="09010101" data-st="N"'+
+                            'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
+                            '<img class="float_div"  id = "'+i+'seat'+j+'img'+'"  src="../../img/remove.png" onclick="removeSeat(\''+i+'seat'+j+'\')"></img></img>'+
+                            '</span>'
+                    }
+                }else {
+                    var value = column+1
+                    if(1 == column%2){
+                        value++;
+					}
+                    for(var j = 1; j < value ; j++){
+
+
+                        span += ' <img seat_type="'+i+','+j+',20" class="myseatFlag seat lover lover-left selectable" data-column-id="'+i+'" id = "'+i+'seat'+j+'" data-row-id="'+j+'" data-no="09010101" data-st="N"'+
+                            'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
+
+                            '</span>'
+                        j++
+                        span += ' <img seat_type="'+i+','+j+',21" class="myseatFlag seat lover lover-right selectable" data-column-id="'+i+'" id = "'+i+'seat'+j+'" data-row-id="'+j+'" data-no="09010101" data-st="N"'+
+                            'data-act="seat-click"  data-bid="b_s7eiiijf" >' +
+                            '<img class="float_div"  id = "'+i+'seat'+j+'img'+'"  src="../../img/remove.png" onclick="removeSeatLove(\''+i+'seat'+j+'\')"></img></img>'+
+                            '</span>'
+                    }
 				}
+
                 seatsWrapper += span
                 seatsWrapper +='</div>'
             }
@@ -101,18 +223,137 @@
         }
 
         function removeSeat(id) {
-            $("#"+id).attr("class",'none');
+            $("#"+id).attr("class",'myseatFlag none');
             $("#"+id).attr("src",'../../img/addseat.png');
             $("#"+id).attr("onclick",'addSeat(\''+id+'\')');
             $("#"+id+"img").attr("style",'display:none');
 //            $("#2args").removeAttr("disabled");
         }
+        function removeSeatLove(id) {
+            $("#"+id).attr("class",'myseatFlag none');
+            $("#"+id).attr("src",'../../img/addseat.png');
+            $("#"+id).attr("onclick",'addSeat(\''+id+'\')');
+            $("#"+id+"img").attr("style",'display:none');
+            var rowId = id.substring(id.length-1,id.length)
+            var loveId = id.substring(0,id.length-1)
+            rowId = parseInt(rowId)
+			rowId--;
+            var love = loveId+rowId
+            $("#"+love).attr("class",'myseatFlag none');
+            $("#"+love).attr("src",'../../img/addseat.png');
+            $("#"+love).attr("onclick",'addSeat(\''+love+'\')');
+            $("#"+love+"img").attr("style",'display:none');
+//            $("#2args").removeAttr("disabled");
+        }
 
         function addSeat(id) {
-            $("#"+id).attr("class",'seat selectable');
-            $("#"+id).removeAttr("onclick");
-            $("#"+id).removeAttr("src");
-            $("#"+id+"img").removeAttr("style");
+            var type = $("#seatType").val()
+			var col = id.substring(0,1) // 行
+            var rowId = id.substring(id.length-1,id.length)
+            if(0 == type){
+                //普通座位
+                $("#"+id).attr("class",'myseatFlag seat selectable');
+                $("#"+id).attr("seat_type",'seat_type="'+col+','+rowId+',1');
+                $("#"+id).removeAttr("onclick");
+                $("#"+id).removeAttr("src");
+                $("#"+id+"img").removeAttr("style");
+            }else{
+                //情侣座位
+                var subId = id.substring(0,id.length-1)
+                rowId = parseInt(rowId)
+				//单数，将后面的座位换下
+                var loveId =''
+				if(1 == rowId%2){
+                    var newRowId = rowId+1;
+                    loveId = subId+newRowId
+                    $("#"+loveId).attr("class",'myseatFlag seat lover lover-right selectable');
+                    $("#"+loveId).removeAttr("onclick");
+                    $("#"+loveId).removeAttr("src");
+                   // $("#"+loveId+"img").removeAttr("style");
+                    $("#"+id).attr("class",'seat lover lover-left selectable');
+                    $("#"+id).removeAttr("onclick");
+                    $("#"+id).removeAttr("src");
+                    $("#"+id+"img").removeAttr("style");
+
+                    $("#"+loveId).attr("seat_type",'myseatFlag seat_type="'+col+','+rowId+',20');
+                    $("#"+id).attr("seat_type",'seat_type="'+col+','+rowId+',21');
+				}else{
+                    //双数，将前面的座位换下
+                    var newRowId = rowId-1;
+                    loveId = subId+newRowId
+                    $("#"+loveId).attr("class",'myseatFlag seat lover lover-left selectable');
+                    $("#"+loveId).removeAttr("onclick");
+                    $("#"+loveId).removeAttr("src");
+                   // $("#"+loveId+"img").removeAttr("style");
+
+
+                    $("#"+id).attr("class",'myseatFlag seat lover lover-right selectable');
+                    $("#"+id).removeAttr("onclick");
+                    $("#"+id).removeAttr("src");
+                    $("#"+id+"img").removeAttr("style");
+                    $("#"+loveId).attr("seat_type",'seat_type="'+col+','+rowId+',21');
+                    $("#"+id).attr("seat_type",'seat_type="'+col+','+rowId+',20');
+				}
+
+
+            }
+
+        }
+
+
+        //添加座位
+        function inseartSeat() {
+			var seatList = $(".row .myseatFlag")
+			if(!seatList || 0 == seatList.length ){
+                return layer.msg('目前没有选择座位。');
+			}
+			var seatRule = "";
+            var row = 0
+            var column=0
+
+            $(".row .myseatFlag").each(function(){
+                var seatType = $(this).attr("seat_type");
+                var cla = $(this).attr("class");
+
+                var spl = seatType.split(",")
+                var columnTemp = spl[0]
+                var rowTemp = spl[1]
+                columnTemp = parseInt(columnTemp)
+                rowTemp = parseInt(rowTemp)
+                column = columnTemp > column ? columnTemp : column
+                row = rowTemp > row ? rowTemp : row
+                if(cla.indexOf("none") >= 0){
+                    seatRule += seatType+",0;"
+                }else{
+                    seatRule += seatType+",1;"
+                }
+
+            })
+
+
+
+			var id = [[${id}]]
+
+            $.ajax({
+                cache : true,
+                type : "POST",
+                url : ctx + "module/cinemaHall/inseartSeat",
+                data : {
+                    "id": id,
+                    "rowNumber": row,
+                    "columnNumber": column,
+					"seatRule":seatRule
+                },
+                async : false,
+                error : function(request) {
+                    $.modal.alertError("系统错误");
+                },
+                success : function(data) {
+                        window.location.href =  prefix
+                }
+            });
+
+
 
         }
     </script>

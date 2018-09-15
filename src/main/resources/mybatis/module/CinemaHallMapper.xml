@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateUser"    column="update_user"    />
         <result property="updateDate"    column="update_date"    />
         <result property="cinemaName"    column="cinema_name"    />
+        <result property="status"    column="status"    />
     </resultMap>
 	
 	<sql id="selectCinemaHallVo">
-        select id, hall_name, seat_number, row_number, column_number, seat_rule, cinema_id, is_valid, create_user, create_date, update_user, update_date from movie_cinema_hall
+        select id, hall_name, seat_number, row_number, column_number, seat_rule, cinema_id,status, is_valid, create_user, create_date, update_user, update_date from movie_cinema_hall
     </sql>
 	
     <select id="selectCinemaHallList" parameterType="CinemaHall" resultMap="CinemaHallResult">
@@ -34,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         hall.column_number,
         hall.seat_rule,
         hall.cinema_id,
+        hall.status,
         hall.is_valid,
         hall.create_user,
         hall.create_date,
@@ -49,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="rowNumber != null and rowNumber != ''"> and row_number = #{rowNumber}</if>
              <if test="columnNumber != null and columnNumber != ''"> and column_number = #{columnNumber}</if>
              <if test="seatRule != null and seatRule != ''"> and seat_rule = #{seatRule}</if>
+             <if test="status != null and status != ''"> and status = #{status}</if>
              <if test="cinemaId != null and cinemaId != ''"> and cinema_id = #{cinemaId}</if>
              <if test="isValid != null and isValid != ''"> and is_valid = #{isValid}</if>
              <if test="createUser != null and createUser != ''"> and create_user = #{createUser}</if>
@@ -72,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="columnNumber != null and columnNumber != '' ">column_number,</if>
 			<if test="seatRule != null and seatRule != '' ">seat_rule,</if>
 			<if test="cinemaId != null and cinemaId != '' ">cinema_id,</if>
+			<if test="status != null and status != '' ">status,</if>
 			<if test="createUser != null and createUser != '' ">create_user,</if>
 			<if test="updateUser != null and updateUser != '' ">update_user,</if>
 			<if test="updateDate != null and updateDate != '' ">update_date,</if>
@@ -86,6 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="columnNumber != null and columnNumber != ''">#{columnNumber},</if>
 			<if test="seatRule != null and seatRule != ''">#{seatRule},</if>
 			<if test="cinemaId != null and cinemaId != ''">#{cinemaId},</if>
+			<if test="status != null and status != ''">#{status},</if>
 			<if test="createUser != null and createUser != ''">#{createUser},</if>
 			<if test="createDate != null and createDate != ''">#{createDate},</if>
 			<if test="updateUser != null and updateUser != ''">#{updateUser},</if>
@@ -104,6 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="columnNumber != null  ">column_number = #{columnNumber},</if>
             <if test="seatRule != null  and seatRule != ''  ">seat_rule = #{seatRule},</if>
             <if test="cinemaId != null  ">cinema_id = #{cinemaId},</if>
+            <if test="status != null  ">status = #{status},</if>
             <if test="isValid != null  ">is_valid = #{isValid},</if>
             <if test="createUser != null  and createUser != ''  ">create_user = #{createUser},</if>
             <if test="createDate != null  ">create_date = #{createDate},</if>

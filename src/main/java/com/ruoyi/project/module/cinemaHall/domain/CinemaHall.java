@@ -39,6 +39,7 @@ public class CinemaHall extends BaseEntity
 	private String updateUser;
 	/**  */
 	private Date updateDate;
+	private Integer status;
 
 	/**影院名称**/
 	private String cinemaName;
@@ -175,5 +176,13 @@ public class CinemaHall extends BaseEntity
 
 	public void setCinemaName(String cinemaName) {
 		this.cinemaName = cinemaName;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }
