@@ -36,9 +36,29 @@
 		<kaptcha.version>2.3.2</kaptcha.version>
 		<swagger.version>2.7.0</swagger.version>
 		<jsoup.version>1.11.3</jsoup.version>
+		<qiniu-version>[7.2.0, 7.2.99]</qiniu-version>
+		<aliyun-oss-version>2.5.0</aliyun-oss-version>
+		<qcloud-cos-version>5.2.4</qcloud-cos-version>
 	</properties>
 
 	<dependencies>
+
+
+		<dependency>
+			<groupId>com.qiniu</groupId>
+			<artifactId>qiniu-java-sdk</artifactId>
+			<version>${qiniu-version}</version>
+		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.aliyun.oss</groupId>-->
+			<!--<artifactId>aliyun-sdk-oss</artifactId>-->
+			<!--<version>${aliyun-oss-version}</version>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>com.qcloud</groupId>-->
+			<!--<artifactId>cos_api</artifactId>-->
+			<!--<version>${qcloud-cos-version}</version>-->
+		<!--</dependency>-->
 
 		<!-- SpringBoot 核心包 -->
 		<dependency>
@@ -52,6 +72,13 @@
                 </exclusion>
             </exclusions>
              -->
+			<!--<exclusions>-->
+				<!--<exclusion>-->
+					<!--<groupId>org.springframework.boot</groupId>-->
+					<!--<artifactId>spring-boot-starter-logging</artifactId>-->
+				<!--</exclusion>-->
+			<!--</exclusions>-->
+
 		</dependency>
 
 		<!-- SpringBoot 测试 -->

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-group-edit" th:object="${group}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+	            <div class="form-group">	
+                <label class="col-sm-3 control-label">组名称：</label>
+                <div class="col-sm-8">
+                    <input id="groupName" name="groupName" th:field="*{groupName}" class="form-control" type="text">
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">类型：</label>
+                <div class="col-sm-8">
+                    <input id="type" name="type" th:field="*{type}" class="form-control" type="text">
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">群主：</label>
+                <div class="col-sm-8">
+                    <input id="groupOwner" name="groupOwner" th:field="*{groupOwner}" class="form-control" type="text">
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">组头像：</label>
+                <div class="col-sm-8">
+                    <input id="groupAvatar" name="groupAvatar" th:field="*{groupAvatar}" class="form-control" type="text">
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">群介绍：</label>
+                <div class="col-sm-8">
+                    <input id="presend" name="presend" th:field="*{presend}" class="form-control" type="text">
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">创建时间：</label>
+                <div class="col-sm-8">
+                    <input id="createTime" name="createTime" th:field="*{createTime}" class="form-control" type="text">
+                </div>
+            </div>
+  		    <div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">提交</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "module/group"
+		$("#form-group-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			submitHandler: function(form) {
+				$.operate.save(prefix + "/edit", $('#form-group-edit').serialize());
+			}
+		});
+	</script>
+</body>
+</html>

@@ -1,8 +1,15 @@
 package com.ruoyi.framework.web.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.api.util.JsonUtil;
+import com.ruoyi.common.constant.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -16,6 +23,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.framework.web.page.TableSupport;
 import com.ruoyi.project.system.user.domain.User;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * web层通用数据处理
  * 
@@ -23,6 +32,13 @@ import com.ruoyi.project.system.user.domain.User;
  */
 public class BaseController
 {
+
+
+    /**
+     * 得到request对象
+     */
+    @Autowired
+    protected HttpServletRequest request;
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
      */
@@ -136,8 +152,55 @@ public class BaseController
         return getUser().getUserId();
     }
 
+    public Long getApiUserId()
+    {
+        Long uId = (Long)request.getAttribute(Constants.LOGIN_USER_KEY);
+        return uId;
+    }
+
+
     public String getLoginName()
     {
         return getUser().getLoginName();
     }
+
+
+
+    public JSONObject getJsonRequest() {
+        JSONObject result = JSONObject.parseObject(getJson());
+        return result;
+    }
+
+    private String getJson(){
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = request.getReader();) {
+            char[] buff = new char[1024];
+            int len;
+            while ((len = reader.read(buff)) != -1) {
+                sb.append(buff, 0, len);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            return "";
+        }
+    }
+
+    public <T>T getJsonRequest(Class<T> tClass) {
+        return JsonUtil.getObjet(getJson(), tClass);
+    }
+
+    /**
+     * 获取请求方IP
+     *
+     * @return 客户端Ip
+     */
+    public String getClientIp() {
+        String xff = request.getHeader("x-forwarded-for");
+        if (xff == null) {
+            return request.getRemoteAddr();
+        }
+        return xff;
+    }
+
+
 }

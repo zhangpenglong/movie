@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.module.group.mapper.GroupMapper">
+    
+    <resultMap type="Group" id="GroupResult">
+        <result property="id"    column="id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="type"    column="type"    />
+        <result property="groupOwner"    column="group_owner"    />
+        <result property="groupAvatar"    column="group_avatar"    />
+        <result property="presend"    column="presend"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="isValid"    column="is_valid"    />
+    </resultMap>
+	
+	<sql id="selectGroupVo">
+        select id, group_name, type, group_owner, group_avatar, presend, create_time, create_user, is_valid from birthday_group
+    </sql>
+	
+    <select id="selectGroupList" parameterType="Group" resultMap="GroupResult">
+        <include refid="selectGroupVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="groupName != null and groupName != ''"> and group_name = #{groupName}</if>
+             <if test="type != null and type != ''"> and type = #{type}</if>
+             <if test="groupOwner != null and groupOwner != ''"> and group_owner = #{groupOwner}</if>
+             <if test="groupAvatar != null and groupAvatar != ''"> and group_avatar = #{groupAvatar}</if>
+             <if test="presend != null and presend != ''"> and presend = #{presend}</if>
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="createUser != null and createUser != ''"> and create_user = #{createUser}</if>
+             <if test="isValid != null and isValid != ''"> and is_valid = #{isValid}</if>
+         </where>
+    </select>
+    
+    <select id="selectGroupById" parameterType="Long" resultMap="GroupResult">
+        <include refid="selectGroupVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGroup" parameterType="Group">
+        insert into birthday_group
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="groupName != null and groupName != '' ">group_name,</if>
+			<if test="type != null and type != '' ">type,</if>
+			<if test="groupOwner != null and groupOwner != '' ">group_owner,</if>
+			<if test="groupAvatar != null and groupAvatar != '' ">group_avatar,</if>
+			<if test="presend != null and presend != '' ">presend,</if>
+			<if test="createTime != null and createTime != '' ">create_time,</if>
+			<if test="createUser != null and createUser != '' ">create_user,</if>
+			<if test="isValid != null and isValid != '' ">is_valid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="groupName != null and groupName != ''">#{groupName},</if>
+			<if test="type != null and type != ''">#{type},</if>
+			<if test="groupOwner != null and groupOwner != ''">#{groupOwner},</if>
+			<if test="groupAvatar != null and groupAvatar != ''">#{groupAvatar},</if>
+			<if test="presend != null and presend != ''">#{presend},</if>
+			<if test="createTime != null and createTime != ''">#{createTime},</if>
+			<if test="createUser != null and createUser != ''">#{createUser},</if>
+			<if test="isValid != null and isValid != ''">#{isValid},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGroup" parameterType="Group">
+        update birthday_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupName != null  and groupName != ''  ">group_name = #{groupName},</if>
+            <if test="type != null  ">type = #{type},</if>
+            <if test="groupOwner != null  ">group_owner = #{groupOwner},</if>
+            <if test="groupAvatar != null  and groupAvatar != ''  ">group_avatar = #{groupAvatar},</if>
+            <if test="presend != null  and presend != ''  ">presend = #{presend},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createUser != null  ">create_user = #{createUser},</if>
+            <if test="isValid != null  ">is_valid = #{isValid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGroupById" parameterType="Long">
+        delete from birthday_group where id = #{id}
+    </delete>
+	
+    <delete id="deleteGroupByIds" parameterType="String">
+        delete from birthday_group where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

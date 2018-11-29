@@ -38,7 +38,6 @@ public class ConfigServiceImpl implements IConfigService
     /**
      * 根据键名查询参数配置信息
      * 
-     * @param configName 参数名称
      * @return 参数键值
      */
     @Override

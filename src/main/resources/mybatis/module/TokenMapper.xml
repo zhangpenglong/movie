@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.module.token.mapper.TokenMapper">
+    
+    <resultMap type="Token" id="TokenResult">
+        <result property="userId"    column="user_id"    />
+        <result property="token"    column="token"    />
+        <result property="expireTime"    column="expire_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectTokenVo">
+        select user_id, token, expire_time, update_time from birthday_token
+    </sql>
+	
+    <select id="selectTokenList" parameterType="Token" resultMap="TokenResult">
+        <include refid="selectTokenVo"/>
+        <where>  
+            <if test="userId != null and userId != ''"> and user_id = #{userId}</if>
+             <if test="token != null and token != ''"> and token = #{token}</if>
+             <if test="expireTime != null"> and expire_time = #{expireTime}</if>
+             <if test="updateTime != null"> and update_time = #{updateTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectTokenById" parameterType="Long" resultMap="TokenResult">
+        <include refid="selectTokenVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertToken" parameterType="Token">
+        insert into birthday_token
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null and userId != '' ">user_id,</if>
+			<if test="token != null and token != '' ">token,</if>
+			<if test="expireTime != null ">expire_time,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null and userId != ''">#{userId},</if>
+			<if test="token != null and token != ''">#{token},</if>
+			<if test="expireTime != null ">#{expireTime},</if>
+			<if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateToken" parameterType="Token">
+        update birthday_token
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="token != null  and token != ''  ">token = #{token},</if>
+            <if test="expireTime != null  ">expire_time = #{expireTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+	<delete id="deleteTokenById" parameterType="Long">
+        delete from birthday_token where user_id = #{userId}
+    </delete>
+	
+    <delete id="deleteTokenByIds" parameterType="String">
+        delete from birthday_token where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <select id="queryByUserId" resultMap="TokenResult">
+        select
+        user_id,
+        token,
+        expire_time,
+        update_time
+        from birthday_token
+        where user_id = #{userId}
+    </select>
+
+
+    <select id="queryByToken" resultMap="TokenResult">
+        select
+      *
+        from birthday_token
+        where token = #{token}
+    </select>
+    
+</mapper>
