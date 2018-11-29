@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-film-edit" th:object="${film}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+	            <div class="form-group">	
+                <label class="col-sm-3 control-label">影片名称（中文）：</label>
+                <div class="col-sm-8">
+                    <input id="filmName" name="filmName" th:field="*{filmName}" class="form-control" type="text">
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">影片名称（英文）：</label>
+                <div class="col-sm-8">
+                    <input id="filmNameUa" name="filmNameUa" th:field="*{filmNameUa}" class="form-control" type="text">
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">首页图片（宣传图）：</label>
+                <div class="col-sm-8">
+                    <input  name="imgIndex" id="imgIndexId" style="display: none" class="form-control" type="text">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="imgIndex">上传图片</button>
+                        <div class="layui-upload-list">
+                            <img  src="*{imgIndex}" class="layui-upload-img" id="imgIndex_1">
+                            <p id="demoText"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">中国上映日期：</label>
+                <div class="col-sm-8">
+                    <input type="text" class="layui-input" id="chainShow"  name="chainShow" >
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">下线日期：</label>
+                <div class="col-sm-8">
+                    <input type="text" class="layui-input" id="downlineDate"  name="downlineDate" >
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <select id="status" name="status"  class="form-control m-b">
+                        <option value="0"  th:selected="${status==0}? true : false">未上映</option>
+                        <option value="1"  th:selected="${status==1}? true : false">预售</option>
+                        <option value="2"  th:selected="${status==2}? true : false">上映</option>
+                        <option value="3"  th:selected="${status==3}? true : false">下映</option>
+                    </select>
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">标签：</label>
+                <div class="col-sm-8">
+                    <input id="label" name="label" th:field="*{label}" class="form-control" type="text">
+
+
+                    <input  name="label" id="label" style="display: none" class="form-control" type="text">
+                    <label th:each="lable:${@dict.getType('movie_film_lable')}" class="check-box">
+                        <label th:each="la:${lableArr}" >
+                            >
+                            <li th:if="${lable.dictLabel==la}" >
+                                <input id="label_temp" name="label_temp" type="checkbox" th:checked="true" th:text="${lable.dictLabel}" th:value="${lable.dictValue}">
+                            </li>
+                            <li th:if="${lable.dictLabel!=la}" >
+                                <input id="label_temp" name="label_temp" type="checkbox" th:checked="false" th:text="${lable.dictLabel}" th:value="${lable.dictValue}">
+                            </li>
+
+                        </label>
+                    </label>
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">影片时长（单位分钟）：</label>
+                <div class="col-sm-8">
+                    <input id="filmTime" name="filmTime" th:field="*{filmTime}" class="form-control" type="text">
+                </div>
+            </div>
+  	            <div class="form-group">	
+                <label class="col-sm-3 control-label">说明：</label>
+                <div class="col-sm-8">
+                    <input id="filmExplain" name="filmExplain" th:field="*{filmExplain}" class="form-control" type="text">
+                </div>
+            </div>
+  					    <div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">提交</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "module/film"
+		$("#form-film-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			submitHandler: function(form) {
+				$.operate.save(prefix + "/edit", $('#form-film-edit').serialize());
+			}
+		});
+	</script>
+</body>
+</html>
